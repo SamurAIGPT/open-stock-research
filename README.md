@@ -32,29 +32,29 @@ In accordance with the financial research specification in `financial_data_api_m
 
 ## 3. Technology Stack
 
-- **Backend**: FastAPI (Python 3.11), Uvicorn, Non-blocking Async HTTPX, Pydantic V2 (Port `8002`).
-- **Frontend**: Next.js 15 (App Router), React 19, Vanilla Tailwind CSS, Lucide React (Port `3002`).
+- **Backend**: FastAPI (Python 3.11), Uvicorn, Non-blocking Async HTTPX, Pydantic V2 (Port `8000`).
+- **Frontend**: Next.js 15 (App Router), React 19, Vanilla Tailwind CSS, Lucide React (Port `3000`).
 - **Design System**: Light Theme, Inter typography (`next/font/google`), Custom Glassmorphism Dropdowns (Zero native `<select>` tags).
 
 ---
 
 ## 4. Quickstart
 
-### Backend Setup (FastAPI - Port 8002)
+### Backend Setup (FastAPI - Port 8000)
 ```bash
 cd server
 pip install -r requirements.txt
-python -m uvicorn app.main:app --port 8002 --reload
+python -m uvicorn app.main:app --port 8000 --reload
 ```
 
-### Frontend Setup (Next.js - Port 3002)
+### Frontend Setup (Next.js - Port 3000)
 ```bash
 cd client
 npm install
 npm run dev
 ```
 
-Visit [http://localhost:3002](http://localhost:3002) in your browser.
+Visit [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 

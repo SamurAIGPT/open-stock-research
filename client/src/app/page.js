@@ -206,9 +206,9 @@ export default function Home() {
             <span>Self-hostable fundamental equity research and market screener</span>
           </div>
           <div className="flex items-center gap-4 text-slate-400 font-mono text-[11px]">
-            <span>FastAPI Port 8002</span>
+            <span>FastAPI Port 8000</span>
             <span>•</span>
-            <span>Next.js Port 3002</span>
+            <span>Next.js Port 3000</span>
             <span>•</span>
             <span>Apache-2.0 License</span>
           </div>

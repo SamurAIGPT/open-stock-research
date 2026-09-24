@@ -8,7 +8,7 @@ class Settings(BaseModel):
     app_name: str = "Open Stock Research"
     app_version: str = "0.1.0"
     environment: str = os.getenv("ENV", "development")
-    port: int = int(os.getenv("PORT", "8002"))
+    port: int = int(os.getenv("PORT", "8000"))
     host: str = os.getenv("HOST", "0.0.0.0")
 
     # Muapi / Treg credentials

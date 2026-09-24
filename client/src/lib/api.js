@@ -4,7 +4,7 @@
  * Zero mock/fake fallbacks. Returns null/empty states when unconfigured or not found.
  */
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8002';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 async function safeFetch(path, options = {}) {
   try {
