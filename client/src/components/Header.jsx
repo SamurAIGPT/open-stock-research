@@ -1,33 +1,34 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { 
   TrendingUp, 
   Search, 
   Bookmark, 
-  Settings, 
-  Activity, 
-  Plus, 
-  Trash2,
-  ExternalLink 
+  Settings 
 } from 'lucide-react';
 import CustomDropdown from './CustomDropdown';
+import { useTicker } from '../context/TickerContext';
 
-export default function Header({
-  activeTicker,
-  setActiveTicker,
-  quote,
-  watchlist = [],
-  onAddToWatchlist,
-  onRemoveFromWatchlist,
-  onOpenSettings,
-}) {
+export default function Header() {
+  const router = useRouter();
+  const { 
+    ticker, 
+    setTicker, 
+    quote, 
+    watchlist, 
+    addToWatchlist, 
+    removeFromWatchlist 
+  } = useTicker();
+
   const [searchInput, setSearchInput] = useState('');
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (!searchInput.trim()) return;
-    setActiveTicker(searchInput.trim().toUpperCase());
+    setTicker(searchInput.trim().toUpperCase());
     setSearchInput('');
   };
 
@@ -37,14 +38,14 @@ export default function Header({
     sublabel: item.notes || 'Tracked equity',
   }));
 
-  const isCurrentInWatchlist = watchlist.some((item) => item.ticker === activeTicker);
+  const isCurrentInWatchlist = watchlist.some((item) => item.ticker === ticker);
 
   return (
     <header className="border-b border-slate-200 bg-white/90 backdrop-blur-md sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Brand & Ticker Switcher */}
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => setActiveTicker('AAPL')}>
+          <Link href="/" className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-sm shadow-blue-500/20">
               <TrendingUp className="w-4 h-4" />
             </div>
@@ -61,14 +62,14 @@ export default function Header({
                 SEC Filings • Standardized Statements • EOD Price Bars • Multi-Filter Screener
               </p>
             </div>
-          </div>
+          </Link>
 
           {/* Quick Watchlist Selector */}
           {watchlistOptions.length > 0 && (
             <div className="hidden md:block">
               <CustomDropdown
-                value={activeTicker}
-                onChange={(val) => setActiveTicker(val)}
+                value={ticker}
+                onChange={(val) => setTicker(val)}
                 options={watchlistOptions}
                 placeholder="Select Watchlist Ticker..."
                 icon={Bookmark}
@@ -94,7 +95,7 @@ export default function Header({
           {/* Active Ticker Real-time Quote Pill */}
           {quote ? (
             <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 shadow-xs">
-              <span className="text-xs font-bold font-mono text-slate-900">{activeTicker}</span>
+              <span className="text-xs font-bold font-mono text-slate-900">{ticker}</span>
               <span className="text-xs font-semibold text-slate-800">${quote.current_price?.toFixed(2)}</span>
               <span
                 className={`text-[11px] font-bold font-mono ${
@@ -107,14 +108,14 @@ export default function Header({
             </div>
           ) : (
             <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-500">
-              <span className="font-mono font-bold text-slate-800">{activeTicker}</span>
+              <span className="font-mono font-bold text-slate-800">{ticker}</span>
             </div>
           )}
 
           {/* Watchlist Toggle */}
           {isCurrentInWatchlist ? (
             <button
-              onClick={() => onRemoveFromWatchlist(activeTicker)}
+              onClick={() => removeFromWatchlist(ticker)}
               title="Remove from Watchlist"
               className="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition shadow-xs cursor-pointer"
             >
@@ -122,7 +123,7 @@ export default function Header({
             </button>
           ) : (
             <button
-              onClick={() => onAddToWatchlist(activeTicker)}
+              onClick={() => addToWatchlist(ticker)}
               title="Save to Watchlist"
               className="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition shadow-xs cursor-pointer"
             >
@@ -130,14 +131,14 @@ export default function Header({
             </button>
           )}
 
-          {/* Settings Trigger */}
-          <button
-            onClick={onOpenSettings}
-            className="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition shadow-xs cursor-pointer"
+          {/* Settings Navigation Link */}
+          <Link
+            href="/settings"
+            className="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition shadow-xs"
             title="Configure API Keys"
           >
             <Settings className="w-4 h-4" />
-          </button>
+          </Link>
         </div>
       </div>
     </header>
