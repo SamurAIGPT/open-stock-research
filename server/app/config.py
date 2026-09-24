@@ -34,4 +34,21 @@ class Settings(BaseModel):
     ]
 
 
-settings = Settings()
+def load_settings() -> Settings:
+    s = Settings()
+    settings_file = os.path.join(s.data_dir, "settings.json")
+    if os.path.exists(settings_file):
+        try:
+            import json
+            with open(settings_file, "r", encoding="utf-8") as f:
+                saved = json.load(f)
+                if saved.get("muapi_api_key"):
+                    s.muapi_api_key = saved["muapi_api_key"]
+                if saved.get("treg_api_token"):
+                    s.treg_api_token = saved["treg_api_token"]
+        except Exception:
+            pass
+    return s
+
+
+settings = load_settings()

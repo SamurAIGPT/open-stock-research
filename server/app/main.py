@@ -13,6 +13,7 @@ from .routers import (
     crypto_router,
     brief_router,
     watchlist_router,
+    settings_router,
 )
 
 app = FastAPI(
@@ -37,6 +38,7 @@ app.include_router(screener_router.router)
 app.include_router(crypto_router.router)
 app.include_router(brief_router.router)
 app.include_router(watchlist_router.router)
+app.include_router(settings_router.router)
 
 
 @app.get("/health")

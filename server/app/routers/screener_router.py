@@ -16,7 +16,7 @@ class ScreenerRunPayload(BaseModel):
 @router.get("/metrics/{ticker}", response_model=FinancialMetrics)
 async def metrics_endpoint(
     ticker: str,
-    period: str = Query("annual", regex="^(annual|quarterly)$"),
+    period: str = Query("annual", pattern="^(annual|quarterly)$"),
 ):
     """Retrieve fundamental ratios (PE, PS, PB, ROE, Margins) for a single ticker."""
     metrics = await get_financial_metrics(ticker=ticker, period=period)

@@ -17,3 +17,7 @@ venv/
 .DS_Store
 *.log
 .vscode/
+
+# Local Data & Credentials
+server/data/
+

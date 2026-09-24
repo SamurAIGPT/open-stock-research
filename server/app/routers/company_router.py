@@ -34,8 +34,8 @@ async def stock_quote_endpoint(ticker: str):
 @router.get("/financials/{ticker}", response_model=list[FinancialStatement])
 async def financial_statements_endpoint(
     ticker: str,
-    statement_type: str = Query("income", regex="^(income|balance|cash_flow)$"),
-    period: str = Query("annual", regex="^(annual|quarterly)$"),
+    statement_type: str = Query("income", pattern="^(income|balance|cash_flow)$"),
+    period: str = Query("annual", pattern="^(annual|quarterly)$"),
     limit: int = Query(5, ge=1, le=20),
 ):
     """Retrieve standardized income statements, balance sheets, or cash flow statements."""

@@ -54,3 +54,29 @@ async def test_research_brief_structure():
     assert brief is not None
     assert brief.ticker == "NVDA"
     assert "NVDA" in brief.overview
+
+
+def test_settings_endpoints():
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.config import settings
+
+    client = TestClient(app)
+
+    # Test GET settings
+    res = client.get("/api/settings")
+    assert res.status_code == 200
+    data = res.json()
+    assert "muapi_api_key" in data
+    assert "treg_api_token" in data
+
+    # Test POST settings
+    test_key = "muapi_test_unit_key_123"
+    post_res = client.post("/api/settings", json={"muapi_api_key": test_key})
+    assert post_res.status_code == 200
+    assert post_res.json()["has_muapi_key"] is True
+    assert settings.muapi_api_key == test_key
+
+    # Reset
+    client.post("/api/settings", json={"muapi_api_key": ""})
+    assert settings.muapi_api_key == ""

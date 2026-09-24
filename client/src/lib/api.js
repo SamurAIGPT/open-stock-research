@@ -8,9 +8,19 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 async function safeFetch(path, options = {}) {
   try {
+    const headers = {
+      'Content-Type': 'application/json',
+      ...(options.headers || {}),
+    };
+    if (typeof window !== 'undefined') {
+      const key = localStorage.getItem('muapi_api_key');
+      if (key) headers['x-api-key'] = key;
+      const treg = localStorage.getItem('treg_api_token');
+      if (treg) headers['x-treg-token'] = treg;
+    }
     const res = await fetch(`${API_BASE}${path}`, {
-      headers: { 'Content-Type': 'application/json' },
       ...options,
+      headers,
     });
     if (res.ok) {
       return await res.json();
@@ -105,6 +115,18 @@ export const api = {
   async removeFromWatchlist(ticker) {
     return await safeFetch(`/api/watchlist/${encodeURIComponent(ticker.trim().toUpperCase())}`, {
       method: 'DELETE',
+    });
+  },
+
+  // Settings & Credentials
+  async getSettings() {
+    return await safeFetch('/api/settings');
+  },
+
+  async saveSettings(payload) {
+    return await safeFetch('/api/settings', {
+      method: 'POST',
+      body: JSON.stringify(payload),
     });
   },
 };
