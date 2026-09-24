@@ -1,0 +1,19 @@
+# Node
+client/node_modules/
+client/.next/
+client/out/
+
+# Python
+server/__pycache__/
+server/*/__pycache__/
+server/*/*/__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+venv/
+.env
+
+# Environment & IDE
+.DS_Store
+*.log
+.vscode/
