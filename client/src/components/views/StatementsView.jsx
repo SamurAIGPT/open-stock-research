@@ -58,7 +58,7 @@ export default function StatementsView({ ticker }) {
   return (
     <div className="space-y-6">
       {/* Controls & Header */}
-      <div className="p-6 rounded-2xl glass-panel border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="relative z-20 p-6 rounded-2xl glass-panel border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <h2 className="text-xl font-bold text-slate-900">Standardized Financial Statements</h2>
@@ -85,6 +85,7 @@ export default function StatementsView({ ticker }) {
             onChange={(val) => setPeriod(val)}
             options={PERIOD_OPTIONS}
             icon={Calendar}
+            align="right"
             className="w-44"
           />
         </div>
