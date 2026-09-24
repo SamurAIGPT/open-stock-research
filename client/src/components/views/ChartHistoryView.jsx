@@ -12,11 +12,15 @@ const TIMEFRAME_OPTIONS = [
   { value: '1Y', label: '1 Year (365 Days)', sublabel: 'Annual historical range' },
 ];
 
+const CHART_WIDTH = 800;
+const CHART_HEIGHT = 300;
+const CHART_PADDING = { top: 20, right: 30, bottom: 40, left: 50 };
+
 export default function ChartHistoryView({ ticker, history, loading, timeframe, setTimeframe }) {
   const [chartMode, setChartMode] = useState('area'); // 'area' or 'candles'
   const [hoveredBar, setHoveredBar] = useState(null);
 
-  const bars = history?.bars || [];
+  const bars = useMemo(() => history?.bars || [], [history?.bars]);
 
   // Compute stats
   const stats = useMemo(() => {
@@ -39,11 +43,6 @@ export default function ChartHistoryView({ ticker, history, loading, timeframe, 
     };
   }, [bars]);
 
-  // SVG Chart Dimensions
-  const width = 800;
-  const height = 300;
-  const padding = { top: 20, right: 30, bottom: 40, left: 50 };
-
   const { points, candleData, volumeBars, minPrice, maxPrice } = useMemo(() => {
     if (!bars || bars.length === 0) return { points: '', candleData: [], volumeBars: [], minPrice: 0, maxPrice: 100 };
     const prices = bars.flatMap((b) => [b.low, b.high]);
@@ -51,21 +50,21 @@ export default function ChartHistoryView({ ticker, history, loading, timeframe, 
     const maxP = Math.max(...prices) * 1.02;
     const maxVol = Math.max(...bars.map((b) => b.volume || 1), 1);
 
-    const chartW = width - padding.left - padding.right;
-    const chartH = height - padding.top - padding.bottom;
+    const chartW = CHART_WIDTH - CHART_PADDING.left - CHART_PADDING.right;
+    const chartH = CHART_HEIGHT - CHART_PADDING.top - CHART_PADDING.bottom;
 
     const pts = bars.map((b, i) => {
-      const x = padding.left + (i / Math.max(1, bars.length - 1)) * chartW;
-      const y = padding.top + chartH - ((b.close - minP) / Math.max(0.01, maxP - minP)) * chartH;
+      const x = CHART_PADDING.left + (i / Math.max(1, bars.length - 1)) * chartW;
+      const y = CHART_PADDING.top + chartH - ((b.close - minP) / Math.max(0.01, maxP - minP)) * chartH;
       return `${x},${y}`;
     }).join(' ');
 
     const candles = bars.map((b, i) => {
-      const x = padding.left + (i / Math.max(1, bars.length - 1)) * chartW;
-      const yOpen = padding.top + chartH - ((b.open - minP) / Math.max(0.01, maxP - minP)) * chartH;
-      const yClose = padding.top + chartH - ((b.close - minP) / Math.max(0.01, maxP - minP)) * chartH;
-      const yHigh = padding.top + chartH - ((b.high - minP) / Math.max(0.01, maxP - minP)) * chartH;
-      const yLow = padding.top + chartH - ((b.low - minP) / Math.max(0.01, maxP - minP)) * chartH;
+      const x = CHART_PADDING.left + (i / Math.max(1, bars.length - 1)) * chartW;
+      const yOpen = CHART_PADDING.top + chartH - ((b.open - minP) / Math.max(0.01, maxP - minP)) * chartH;
+      const yClose = CHART_PADDING.top + chartH - ((b.close - minP) / Math.max(0.01, maxP - minP)) * chartH;
+      const yHigh = CHART_PADDING.top + chartH - ((b.high - minP) / Math.max(0.01, maxP - minP)) * chartH;
+      const yLow = CHART_PADDING.top + chartH - ((b.low - minP) / Math.max(0.01, maxP - minP)) * chartH;
       const isUp = b.close >= b.open;
       return {
         bar: b,
@@ -81,9 +80,9 @@ export default function ChartHistoryView({ ticker, history, loading, timeframe, 
     });
 
     const volBars = bars.map((b, i) => {
-      const x = padding.left + (i / Math.max(1, bars.length - 1)) * chartW;
+      const x = CHART_PADDING.left + (i / Math.max(1, bars.length - 1)) * chartW;
       const barH = (b.volume / maxVol) * 45;
-      const y = height - padding.bottom - barH;
+      const y = CHART_HEIGHT - CHART_PADDING.bottom - barH;
       return { x, y, height: barH, isUp: b.close >= b.open, volume: b.volume };
     });
 
@@ -186,25 +185,25 @@ export default function ChartHistoryView({ ticker, history, loading, timeframe, 
         ) : (
           <div className="relative overflow-x-auto">
             <svg
-              viewBox={`0 0 ${width} ${height}`}
+              viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
               className="w-full h-auto max-h-80 select-none overflow-visible"
             >
               {/* Horizontal Grid lines */}
               {[0, 0.25, 0.5, 0.75, 1].map((ratio, idx) => {
-                const y = padding.top + (height - padding.top - padding.bottom) * ratio;
+                const y = CHART_PADDING.top + (CHART_HEIGHT - CHART_PADDING.top - CHART_PADDING.bottom) * ratio;
                 const p = maxPrice - (maxPrice - minPrice) * ratio;
                 return (
                   <g key={idx}>
                     <line
-                      x1={padding.left}
+                      x1={CHART_PADDING.left}
                       y1={y}
-                      x2={width - padding.right}
+                      x2={CHART_WIDTH - CHART_PADDING.right}
                       y2={y}
                       stroke="#f1f5f9"
                       strokeWidth="1"
                     />
                     <text
-                      x={padding.left - 8}
+                      x={CHART_PADDING.left - 8}
                       y={y + 3}
                       textAnchor="end"
                       fontSize="9"

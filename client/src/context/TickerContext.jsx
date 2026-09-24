@@ -24,7 +24,7 @@ function TickerProviderContent({ children }) {
     if (urlTicker && urlTicker.toUpperCase() !== ticker) {
       setTickerState(urlTicker.toUpperCase());
     }
-  }, [urlTicker]);
+  }, [urlTicker, ticker]);
 
   // Load watchlist on mount
   useEffect(() => {
